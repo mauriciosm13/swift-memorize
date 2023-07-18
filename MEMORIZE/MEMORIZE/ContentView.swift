@@ -11,44 +11,47 @@ struct ContentView: View {
     var emojis: Array<String> = ["🚎","🚂", "🚢", "🚀",  "🛸",  "🚘",  "🚍",  "🚚",  "🚖",  "🏎️",  "🚛",  "✈️",  "🚠"]
     @State var emojiCount = 6
     
-    var body: some View {
+        var body: some View {
         VStack{
             HStack{
-                ForEach(emojis[0..<emojiCount], id: \.self) { emoji in
-                    CardView(content: emoji)
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
+                        ForEach(emojis[0..<emojiCount], id: \.self) { emoji in
+                            CardView(content: emoji)
+                                .aspectRatio(2/3, contentMode: .fit)
+                        }
+                    }
                 }
-            }
+            }.foregroundColor(.red)
             Spacer(minLength: 20)
             HStack {
                 removeButton
                 Spacer()
                 addButton
-        }
+            }
             .font(.largeTitle)
             .padding(.horizontal)
-            .foregroundColor(.blue)
-    }
+        }
         .padding(.horizontal)
-        .foregroundColor(.red)
+        
     }
     var removeButton: some View {
-        Button(action: {
+    Button {
             if emojiCount > 1 {
                 emojiCount -= 1
             }
-        }, label: {
+        } label: {
             Image(systemName: "minus.circle")
-            })
+            }
     }
     var addButton: some View{
-        Button(action: {
+        Button{
             if emojiCount < emojis.count {
                 emojiCount += 1
-            }
-            
-        }, label: {
+        }
+        } label: {
             Image(systemName:"plus.circle")
-            })
+            }
     }
 }
 
@@ -61,7 +64,7 @@ struct CardView: View {
             if isFaceUp
             {
                 shape.fill().foregroundColor(.white)
-                shape.stroke(lineWidth: 3)
+                shape.strokeBorder(lineWidth: 3)
                 Text(content).font(.largeTitle)
             } else {
                 shape.fill()
